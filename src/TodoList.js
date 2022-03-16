@@ -8,7 +8,7 @@ const getLocalItems = () => {
     // console.log(list);
     if (list) {
         // console.log(JSON.parse(localStorage.getItem('myLists')));
-        return JSON.parse(localStorage.getItem('myLists'));
+        return JSON.parse(list);
     } else {
         return []
     }
@@ -81,11 +81,25 @@ const TodoList = () => {
         localStorage.setItem('myLists', JSON.stringify(items)); //In Local Storage, we only need to store strings, so we convert the array to a string through JSON.stringify()
     }, [items]);
 
+    const postData = async (e) => {
+        e.preventDefault();
+        const res = await fetch("https://reacttodoapp-957a3-default-rtdb.firebaseio.com/reacttodolist.json",{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                todoListName: items,
+            })
+        }) 
+    }
+
     return (
        <>
             <div className="main-div">
                 <div className="child-div">
                     <h1>ToDo List</h1>
+                    <form action="">
                     <div className="addItems">
                         <input type="text" className="form-control" placeholder=" Add items....."
                             value={inputData }
@@ -110,7 +124,10 @@ const TodoList = () => {
                             })
                         }  
                     </div>
-
+                    <div className="showItems">
+                        <button className="btn" target="_blank" onClick={postData}>SEND DATA</button>
+                    </div>
+                    </form>
                     <div className="showItems">
                         <button className="btn" target="_blank" onClick={deleteAll}>REMOVE ALL</button>
                     </div>
